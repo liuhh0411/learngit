@@ -1,0 +1,5 @@
+Navicat Premium Enterprise 9.0.15 简体中文版本注册码 注册码：NAVM-5ZCW-5PER-KPFT
+安装 navicat 之后， 解开instantclient.zip 复盖 navicat 安装目录下的相同目录。
+
+premium版本注册码：NAVM-5ZCW-5PER-KPFT
+

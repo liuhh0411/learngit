@@ -1,0 +1,126 @@
+克隆系统解决网络问题：
+一、直接修改vi /etc/sysconfig/network-script/ifcfg-eth0
+1.删掉 UUID  HWADDR
+二、然后删除 rm -rf /etc/udev/rules.d/70-persistent-net.rules
+三、输入reboot回车 重启系统
+
+
+1、虚机导入vmware虚机备份文件
+用户：root 密码 ：123123
+
+
+2、远程登录Centos6.9
+在win7 虚拟机中 安装SecureCRT 和flashfxp
+
+
+3、JDK环境变量
+在根目录创建soft文件夹用于软件的安装
+mkdir /soft
+
+从win拷贝JDK的安装包到/tmp目录
+解压缩到指定路径下
+tar zxvf  /root/soft/jdk7u79linuxx64.tar.gz -C /soft
+
+改配置文件profile环境变量
+vi /etc/profile
+export JAVA_HOME=/soft/jdk1.7.0_79
+export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$CLASSPATH 
+export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH 
+
+输入以下命令使环境变量生效：
+source /etc/profile
+
+输入以下命令检查java是否安装成功：
+java -version
+
+4、tomcat安装及发布：
+cd /tmp
+从win拷贝tomcat的安装包到/tmp目录
+
+解压缩到指定路径下
+tar zxvf tomcat-7.0.68.tar.gz -C /soft
+
+启动tomcat服务
+cd /soft/apache-tomcat-7.0.68/bin
+./startup.sh
+
+验证tomcat是否启动成功
+（1）方法一
+ps -ef|grep tomcat
+
+（2）方法二
+http://192.168.100.138:8080/
+
+（3）方法三
+查看Tomcat端口号是否被占用,端口号是8080
+netstat -tunlp|grep 8080
+
+附注：
+cat /soft/apache-tomcat-7.0.68/conf/server.xml
+vim /soft/apache-tomcat-7.0.68/conf/server.xml
+
+查看tomcat启动日志：
+cat /soft/apache-tomcat-7.0.68/logs/catalina.out
+tail -f catalina.out
+
+启动tomcat服务
+cd /root/soft/apache-tomcat-7.0.68/bin
+./startup.sh
+
+停止tomcat服务
+./shutdown.sh
+
+
+
+5、mysql
+在线安装mysql
+yum install -y mysql mysql-server mysql-devel
+
+启动mysql服务
+service mysqld start
+
+验证是否启动成功
+ps -ef|grep mysql
+
+设置mysql密码
+mysqladmin -u root password 123123
+
+登录mysql
+mysql -uroot -p123123
+
+授权用户从远程登录
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123123' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+
+设置开机自动启动mysql：chkconfig mysqld on
+查看开机启动设置是否成功：chkconfig --list | grep mysql
+
+在win端打开navicat软件，执行sql脚本
+
+查看mysql端口号是否被占用,端口号是3306
+netstat -tunlp|grep 3306
+
+登录 mysql -uroot -p123123
+查看数据库 show databases;
+查看mysql  use mysql;
+看有什么表 show tables;
+退出 exit;
+
+右键打开连接
+运行sql文件，导入
+Navicat Premium导入工程数据库
+
+
+发布工程
+把shopping.war 上传到/soft/apache-tomcat-7.0.68/webapps
+
+
+安装Navicat客户端
+连接
+连接名输入ip
+主机名或ip地址输入ip
+用户名root
+密码 123123
+
+

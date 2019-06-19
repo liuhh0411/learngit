@@ -1,0 +1,58 @@
+Action()
+{
+	char temp[200];
+	char str[200];
+
+
+
+	//登录
+	web_custom_request("login",
+		"Method=POST",			   
+		"URL=http://{IP}:8080/javamall/api/shop/member!login.do"	,
+        "BODY=username={username}&password=123123",
+		LAST);
+
+	//加购物车
+	web_custom_request("addcart", "Method=POST", 
+
+		"URL=http://{IP}:8080/javamall/api/shop/cart!addGoods.do", 
+	
+		"Body=num=1&goodsid={goods_id}", 
+	
+		LAST ); 
+	
+	web_reg_save_param("find_luanma",
+		"LB=result\":",
+		"RB=,\"order",
+		"Ord=1",
+		"Search=All",
+		LAST);
+// 	lr_error_message("========================================================");
+
+	lr_start_transaction("Order");
+
+	//下单
+	web_custom_request("Order",
+		"Method=POST",			   
+		"URL=http://{IP}:8080/javamall/api/shop/order!create.do"	,
+        "BODY=addressId=2&paymentId=1&typeId=1",
+		LAST);
+
+lr_convert_string_encoding(lr_eval_string("{find_luanma}"),LR_ENC_UTF8,LR_ENC_SYSTEM_LOCALE, "temp");
+strcpy(str,lr_eval_string("{temp}"));
+lr_save_string(str,"temp");
+
+
+lr_output_message("最终使用变量 = 【%s】",lr_eval_string("{temp}"));   
+    
+	
+
+	if (atoi(lr_eval_string("{temp}"))==1) {
+		lr_end_transaction("Order", LR_PASS);
+	}else{
+		lr_end_transaction("Order", LR_FAIL);
+
+	}
+
+	return 0;
+}

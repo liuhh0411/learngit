@@ -1,0 +1,50 @@
+package com.longteng.ptest;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class JdbcInsert {
+	//全局变量
+	PreparedStatement statement;
+	Connection conn;
+	
+	public static void main(String[] args) throws Throwable {
+		JdbcInsert jdbc = new JdbcInsert();
+		jdbc.init();
+		jdbc.action();
+		jdbc.end();
+	}
+
+	public int init() throws ClassNotFoundException, SQLException {
+		//注册驱动，告诉java连接哪个数据库。
+		Class.forName("com.mysql.jdbc.Driver");
+		//建立mysql数据库链接
+		conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "123456");
+//		System.out.println(conn);
+		//把sql进行预编译
+		statement = conn.prepareStatement("insert into employee (cardno,name,sex,age,occupation) value(?,?,?,18,'dev')");
+
+		return 0;
+	}
+
+
+	public int action() throws Throwable {
+		//执行sql前，先进行参数化
+		statement.setInt(1, 789);
+		statement.setString(2, "longteng_00001");
+		statement.setString(3, "F");
+		//执行sql
+		int row = statement.executeUpdate();
+		System.out.println("插入"+row+"行");
+		return 0;
+	}
+
+
+	public int end() throws Throwable {
+		//关闭连接
+		conn.close();
+		return 0;
+	}
+}

@@ -1,0 +1,23 @@
+BEGIN
+	DECLARE i int DEFAULT 0;
+	DECLARE p_name VARCHAR(20);
+	DECLARE p_age int;
+	DECLARE p_sex varchar(4);
+	DECLARE p_occupation VARCHAR(4);
+	while i < 1000
+	DO
+		set p_age = FLOOR(RAND() * 100);
+		set p_name = CONCAT('longteng_',FLOOR(RAND() * 10000));
+
+		if i%2 = 0 THEN
+			set p_sex = 'F';
+			set p_occupation = 'test';
+		ELSE
+			set p_sex = 'M';
+			set p_occupation = 'dev';
+		end IF;
+
+		insert into employee (cardno,name,sex,age,occupation,created,modified) value(100000+i,p_name,p_sex,p_age,p_occupation,NOW(),NOW());
+		set i = i+1;
+	END WHILE;
+END
